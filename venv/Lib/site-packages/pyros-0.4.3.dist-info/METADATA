@@ -1,0 +1,25 @@
+Metadata-Version: 2.1
+Name: pyros
+Version: 0.4.3
+Summary: ROS Node to provide ROS introspection for non-ROS users.
+Home-page: http://github.com/asmodehn/pyros
+Author: AlexV
+Author-email: asmodehn@gmail.com
+License: BSD
+Platform: UNKNOWN
+Provides-Extra: ros
+Requires-Dist: tblib
+Requires-Dist: six
+Requires-Dist: pyzmq
+Requires-Dist: pyzmp (>=0.0.14)
+Requires-Dist: pyros-setup (>=0.1.5)
+Requires-Dist: pyros-config (>=0.1.4)
+Requires-Dist: pyros-common (>=0.5.1)
+Requires-Dist: nose (>=1.3.7)
+Requires-Dist: mock (>=1.0.1)
+Provides-Extra: ros
+Requires-Dist: pyros-interfaces-ros; extra == 'ros'
+
+UNKNOWN
+
+

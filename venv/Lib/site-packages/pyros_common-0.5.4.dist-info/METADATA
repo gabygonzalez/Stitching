@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: pyros-common
+Version: 0.5.4
+Summary: Common interface packages for Pyros framework
+Home-page: http://github.com/asmodehn/pyros-common
+Author: AlexV
+Author-email: asmodehn@gmail.com
+License: BSD
+Platform: UNKNOWN
+Requires-Dist: tblib
+Requires-Dist: six
+Requires-Dist: pyzmq
+Requires-Dist: pyzmp (>=0.0.17)
+Requires-Dist: pyros-config (>=0.1.4)
+Requires-Dist: mock (>=1.0.1)
+
+UNKNOWN
+
+

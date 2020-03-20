@@ -1,0 +1,3 @@
+[console_scripts]
+pyros_config = pyros_config.__main__:main
+

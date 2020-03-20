@@ -1,0 +1,1 @@
+git+https://github.com/asmodehn/pyros-rosinterface.git@namespace#egg=pyros_interfaces_ros

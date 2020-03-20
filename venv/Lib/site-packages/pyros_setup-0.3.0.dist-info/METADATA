@@ -1,0 +1,16 @@
+Metadata-Version: 2.0
+Name: pyros-setup
+Version: 0.3.0
+Summary: Toolsuite for running ROS environments directly from python code, without any specific requirements outside of usual python
+Home-page: http://github.com/asmodehn/pyros-setup
+Author: AlexV
+Author-email: asmodehn@gmail.com
+License: BSD
+Platform: UNKNOWN
+Requires-Dist: six (>=1.10.0)
+Requires-Dist: pyros-config (>=0.2.0)
+Requires-Dist: pytest (>=2.9.2)
+
+UNKNOWN
+
+
