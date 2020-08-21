@@ -91,9 +91,9 @@ class ORB():
 
         if flag == 0:
             print("cero")
-            imageA = cv2.resize(imageA, (int(imageA.shape[1] * .8), int(imageA.shape[0] * .8)),
+            imageA = cv2.resize(imageA, (int(imageA.shape[1] * .5), int(imageA.shape[0] * .5)),
                                 interpolation=cv2.INTER_AREA)
-            imageB = cv2.resize(imageB, (int(imageB.shape[1] * .8), int(imageB.shape[0] * .8)),
+            imageB = cv2.resize(imageB, (int(imageB.shape[1] * .5), int(imageB.shape[0] * .5)),
                                 interpolation=cv2.INTER_AREA)
 
 
@@ -101,11 +101,11 @@ class ORB():
         #result = cv2.GaussianBlur(result, (3, 3), 1)
 
 
-        if cont%2 == 3:
-            print("sharpened")
-            result = self.unsharp_mask(result)
-        # qelse:
-        #    result = cv2.GaussianBlur(result, (3,  3), 1)
+        #         if cont%2 == 0:
+        #             print("sharpened")
+        #             result = self.unsharp_mask(result)
+        #         else:
+        #             result = cv2.GaussianBlur(result, (3,  3), 1)
 
 
         cv2.imshow("match result", result)
