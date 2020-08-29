@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 from PIL import Image
-from PIL import ImageFilter
 
 class ORB():
 
@@ -27,53 +26,6 @@ class ORB():
     #          return crop
         mask = img[:, :, 1] > tol
         return img[np.ix_(mask.any(1), mask.any(0))]
-
-    def crop_right(self, img): #función extra para cortar la imágen y obtener su lado derecho
-        height, width = img.shape[:2]
-
-        cv2_im = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        pil_im = Image.fromarray(cv2_im)
-
-        borders = (0, 0, int(width*.8), height)  # .4
-        cropped = pil_im.crop(borders)
-        cropped = cv2.cvtColor(np.array(cropped), cv2.COLOR_RGB2BGR)
-
-        return cropped
-
-    def crop_mid(self, img): #función extra para cortar la imágen y obtener su sección media
-        height, width = img.shape[:2]
-
-        cv2_im = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        pil_im = Image.fromarray(cv2_im)
-
-        borders = (width*.25, 0, width*.75, height)
-        cropped = pil_im.crop(borders)
-        cropped = cv2.cvtColor(np.array(cropped), cv2.COLOR_RGB2BGR)
-        return cropped
-
-    def crop_left(self, img): #función extra para cortar la imágen y obtener su lado izquierdo
-        height, width = img.shape[:2]
-
-        cv2_im = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        pil_im = Image.fromarray(cv2_im)
-
-        borders = (int(width*.3), 0, width, height) # .6
-        cropped = pil_im.crop(borders)
-        cropped = cv2.cvtColor(np.array(cropped), cv2.COLOR_RGB2BGR)
-        return cropped
-
-    def unsharp_mask(self, img, kernel_size=(5,5), sigma=1.0, amount=1.0, threshold=0): #función extra para "afilar" la imagen
-        """Return a sharpened version of the image, using an unsharp mask. """
-        blurred = cv2.GaussianBlur(img, kernel_size, sigma)
-        sharpened = float(amount + 1) * img - float(amount) * blurred
-        sharpened = np.maximum(sharpened, np.zeros(sharpened.shape))
-        sharpened = np.minimum(sharpened, 255 * np.ones(sharpened.shape))
-        sharpened = sharpened.round().astype(np.uint8)
-        if threshold > 0:
-            low_contrast_mask = np.absolute(img - blurred) < threshold
-            np.copyto(sharpened, img, where=low_contrast_mask)
-
-        return sharpened
 
     def stitch(self, images, ratio=0.75, reprojThresh=4.0):
         (imageB, imageA) = images
@@ -238,3 +190,50 @@ class ORB():
         result = self.crop(result)
 
         return result
+
+    def crop_right(self, img): #función extra para cortar la imágen y obtener su lado derecho
+        height, width = img.shape[:2]
+
+        cv2_im = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        pil_im = Image.fromarray(cv2_im)
+
+        borders = (0, 0, int(width*.8), height)  # .4
+        cropped = pil_im.crop(borders)
+        cropped = cv2.cvtColor(np.array(cropped), cv2.COLOR_RGB2BGR)
+
+        return cropped
+
+    def crop_mid(self, img): #función extra para cortar la imágen y obtener su sección media
+        height, width = img.shape[:2]
+
+        cv2_im = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        pil_im = Image.fromarray(cv2_im)
+
+        borders = (width*.25, 0, width*.75, height)
+        cropped = pil_im.crop(borders)
+        cropped = cv2.cvtColor(np.array(cropped), cv2.COLOR_RGB2BGR)
+        return cropped
+
+    def crop_left(self, img): #función extra para cortar la imágen y obtener su lado izquierdo
+        height, width = img.shape[:2]
+
+        cv2_im = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        pil_im = Image.fromarray(cv2_im)
+
+        borders = (int(width*.3), 0, width, height) # .6
+        cropped = pil_im.crop(borders)
+        cropped = cv2.cvtColor(np.array(cropped), cv2.COLOR_RGB2BGR)
+        return cropped
+
+    def unsharp_mask(self, img, kernel_size=(5,5), sigma=1.0, amount=1.0, threshold=0): #función extra para "afilar" la imagen
+        """Return a sharpened version of the image, using an unsharp mask. """
+        blurred = cv2.GaussianBlur(img, kernel_size, sigma)
+        sharpened = float(amount + 1) * img - float(amount) * blurred
+        sharpened = np.maximum(sharpened, np.zeros(sharpened.shape))
+        sharpened = np.minimum(sharpened, 255 * np.ones(sharpened.shape))
+        sharpened = sharpened.round().astype(np.uint8)
+        if threshold > 0:
+            low_contrast_mask = np.absolute(img - blurred) < threshold
+            np.copyto(sharpened, img, where=low_contrast_mask)
+
+        return sharpened
