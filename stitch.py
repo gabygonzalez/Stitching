@@ -9,8 +9,8 @@ def main():
     #cap = cv2.VideoCapture(0)
     cap = cv2.VideoCapture("videos/street 3.mp4")
 
-    derecha = cv2.imread("derecha.jpg")
-    izquierda = cv2.imread("izquierda.jpg")
+    # derecha = cv2.imread("derecha.jpg")
+    # izquierda = cv2.imread("izquierda.jpg")
 
     # Check if camera opened successfully
 
@@ -24,10 +24,7 @@ def main():
     cont = 0
     distancia = 2
     dist = distancia
-    cdist = 0
     img_list = []
-    match = None
-    this = None
 
 
     while (True):
@@ -42,39 +39,18 @@ def main():
             if cont == 0:
                 img_list.append(frame)
             elif cont <= cap.get(cv2.CAP_PROP_FRAME_COUNT) and cont == dist:
-                if len(img_list) == 1:
-                    imA = img_list.pop()
-                    # imB = frame
-                    #                     img_list.append(imA)
-                    #                     img_list.append(imB)
-                    #                     orb = ORB(imB)
-                    #                     this = orb.stitch([imB, imA], 3)
-                # else:
+                imA = img_list.pop()
                 imB = frame
-                img_list.append(imA)
-                cv2.imwrite('A this.jpg', imA)
-                img_list.append(imB)
-                orb = ORB(imB)
-                if cdist % 2 == 3:
-                    this = orb.stitch([imB, imA], 0, cdist)
-                else:
-                    this = orb.stitch([imA, imB], 1, cdist)
+                # cv2.imwrite('A this.jpg', imA)
+                orb = ORB([imA, imB])
+                this = orb.stitched
                 print("stitched ", cont)
 
-                if len(img_list) > 1:
-                    img_list.pop()
-                    img_list.pop()
-                    img_list.append(this)
-                else:
-                    img_list.pop()
-                    img_list.append(this)
-                cdist += 1
+                img_list.append(this)
                 dist += distancia
 
-                match = this
-                imA = this
                 # cv2.imshow("match result", match)
-                print("shape 0 ", match.shape[0], "shape 1", match.shape[1])
+                print("shape 0 ", this.shape[0], "shape 1", this.shape[1])
 
             # Display the resulting frame
             cv2.imshow("submarine", frame)
@@ -91,7 +67,7 @@ def main():
 
         #termina el video
 
-    status = cv2.imwrite("stitched.jpg", match)
+    status = cv2.imwrite("stitched.jpg", this)
     print("saved: ", status)
     cap.release()
 

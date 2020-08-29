@@ -5,19 +5,9 @@ from PIL import ImageFilter
 
 class ORB():
 
-    def __init__(self, img):
-        self.img = img
-        self.descriptor = None
-        self.keypoints = self.orb(img)
-
-    def orb(self, img):
-        orb = cv2.ORB_create()
-
-        keypoints, descriptor = orb.detectAndCompute(img, None)
-
-        self.descriptor = descriptor
-
-        return keypoints
+    def __init__(self, images):
+        self.imageA, self.imageB = images
+        self.stitched = self.stitch(images)
 
     def crop(self, img, tol=0):
          # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -38,7 +28,7 @@ class ORB():
         mask = img[:, :, 1] > tol
         return img[np.ix_(mask.any(1), mask.any(0))]
 
-    def crop_right(self, img):
+    def crop_right(self, img): #función extra para cortar la imágen y obtener su lado derecho
         height, width = img.shape[:2]
 
         cv2_im = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -50,7 +40,7 @@ class ORB():
 
         return cropped
 
-    def crop_mid(self, img):
+    def crop_mid(self, img): #función extra para cortar la imágen y obtener su sección media
         height, width = img.shape[:2]
 
         cv2_im = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -61,7 +51,7 @@ class ORB():
         cropped = cv2.cvtColor(np.array(cropped), cv2.COLOR_RGB2BGR)
         return cropped
 
-    def crop_left(self, img):
+    def crop_left(self, img): #función extra para cortar la imágen y obtener su lado izquierdo
         height, width = img.shape[:2]
 
         cv2_im = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -72,7 +62,7 @@ class ORB():
         cropped = cv2.cvtColor(np.array(cropped), cv2.COLOR_RGB2BGR)
         return cropped
 
-    def unsharp_mask(self, img, kernel_size=(5,5), sigma=1.0, amount=1.0, threshold=0):
+    def unsharp_mask(self, img, kernel_size=(5,5), sigma=1.0, amount=1.0, threshold=0): #función extra para "afilar" la imagen
         """Return a sharpened version of the image, using an unsharp mask. """
         blurred = cv2.GaussianBlur(img, kernel_size, sigma)
         sharpened = float(amount + 1) * img - float(amount) * blurred
@@ -85,28 +75,12 @@ class ORB():
 
         return sharpened
 
-    def stitch(self, images, flag, cont, ratio=0.75, reprojThresh=4.0):
+    def stitch(self, images, ratio=0.75, reprojThresh=4.0):
         (imageB, imageA) = images
+
         # CALIBRAR IMAGEN: BUSCAR CONFIGURACIÓN DE LA CÁMARA CON LA QUE SE GRABÓ
 
-        if flag == 0:
-            print("cero")
-            imageA = cv2.resize(imageA, (int(imageA.shape[1] * .5), int(imageA.shape[0] * .5)),
-                                interpolation=cv2.INTER_AREA)
-            imageB = cv2.resize(imageB, (int(imageB.shape[1] * .5), int(imageB.shape[0] * .5)),
-                                interpolation=cv2.INTER_AREA)
-
-
         (result) = self.stitch_images(imageA, imageB, ratio, reprojThresh)
-        #result = cv2.GaussianBlur(result, (3, 3), 1)
-
-
-        #         if cont%2 == 0:
-        #             print("sharpened")
-        #             result = self.unsharp_mask(result)
-        #         else:
-        #             result = cv2.GaussianBlur(result, (3,  3), 1)
-
 
         cv2.imshow("match result", result)
 
@@ -155,7 +129,7 @@ class ORB():
                                              reprojThresh)  # 4.0
 
             # return the matches along with the homograpy matrix
-            # and status of each matched point
+            #             # and status of each matched point
             return (matches, H, status)
 
         # otherwise, no homograpy could be computed
@@ -173,9 +147,6 @@ class ORB():
         (kpsA, featuresA) = self.detectAndDescribe(imageA)
         (kpsB, featuresB) = self.detectAndDescribe(imageB)
 
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            print("ok")
 
         # match features between the two images
         M = self.matchKeypoints(kpsA, kpsB,
@@ -219,9 +190,6 @@ class ORB():
         (kpsA, featuresA) = self.detectAndDescribe(imageA)
         (kpsB, featuresB) = self.detectAndDescribe(imageB)
 
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            print("ok")
 
         # match features between the two images
         M = self.matchKeypoints(kpsA, kpsB,
